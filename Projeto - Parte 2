@@ -1,0 +1,467 @@
+DROP DATABASE IF EXISTS projeto_vendas;
+CREATE DATABASE projeto_vendas;
+USE projeto_vendas;
+
+CREATE TABLE Pessoa (
+    idPessoa INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    cpf CHAR(11) NOT NULL UNIQUE,
+    telefone VARCHAR(20),
+    email VARCHAR(100) UNIQUE,
+    endereco VARCHAR(150)
+);
+
+CREATE TABLE Cliente (
+    Pessoa_idPessoa INT PRIMARY KEY,
+    data_cadastro DATE NOT NULL,
+    CONSTRAINT fk_cliente_pessoa FOREIGN KEY (Pessoa_idPessoa)
+        REFERENCES Pessoa(idPessoa)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Funcionario (
+    Pessoa_idPessoa INT PRIMARY KEY,
+    cargo VARCHAR(50) NOT NULL,
+    data_admissao DATE NOT NULL,
+    salario DECIMAL(10,2) NOT NULL,
+    Funcionario_Pessoa_idPessoa INT NULL,
+    CONSTRAINT fk_funcionario_pessoa FOREIGN KEY (Pessoa_idPessoa)
+        REFERENCES Pessoa(idPessoa)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_funcionario_supervisor FOREIGN KEY (Funcionario_Pessoa_idPessoa)
+        REFERENCES Funcionario(Pessoa_idPessoa)
+        ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+CREATE TABLE Categoria (
+    idCategoria INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL,
+    descricao VARCHAR(150)
+);
+
+CREATE TABLE Produto (
+    idProduto INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    descricao VARCHAR(255),
+    preco DECIMAL(10,2) NOT NULL,
+    estoque INT NOT NULL,
+    Categoria_idCategoria INT NOT NULL,
+    CONSTRAINT fk_produto_categoria FOREIGN KEY (Categoria_idCategoria)
+        REFERENCES Categoria(idCategoria)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE Fornecedor (
+    idFornecedor INT AUTO_INCREMENT PRIMARY KEY,
+    razao_social VARCHAR(100) NOT NULL,
+    cnpj CHAR(14) NOT NULL UNIQUE,
+    telefone VARCHAR(20),
+    email VARCHAR(100)
+);
+
+CREATE TABLE Fornecimento (
+    Fornecedor_idFornecedor INT NOT NULL,
+    Produto_idProduto INT NOT NULL,
+    preco_custo DECIMAL(10,2) NOT NULL,
+    prazo_entrega_dias INT NOT NULL,
+    PRIMARY KEY (Fornecedor_idFornecedor, Produto_idProduto),
+    CONSTRAINT fk_fornecimento_fornecedor FOREIGN KEY (Fornecedor_idFornecedor)
+        REFERENCES Fornecedor(idFornecedor)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_fornecimento_produto FOREIGN KEY (Produto_idProduto)
+        REFERENCES Produto(idProduto)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Pedido (
+    idPedido INT AUTO_INCREMENT PRIMARY KEY,
+    data_pedido DATETIME NOT NULL,
+    valor_total DECIMAL(10,2) NOT NULL,
+    status VARCHAR(30) NOT NULL,
+    Cliente_Pessoa_idPessoa INT NOT NULL,
+    Funcionario_Pessoa_idPessoa INT NOT NULL,
+    CONSTRAINT fk_pedido_cliente FOREIGN KEY (Cliente_Pessoa_idPessoa)
+        REFERENCES Cliente(Pessoa_idPessoa)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT fk_pedido_funcionario FOREIGN KEY (Funcionario_Pessoa_idPessoa)
+        REFERENCES Funcionario(Pessoa_idPessoa)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+);DROP DATABASE IF EXISTS projeto_vendas;
+CREATE DATABASE projeto_vendas;
+USE projeto_vendas;
+
+CREATE TABLE Pessoa (
+    idPessoa INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    cpf CHAR(11) NOT NULL UNIQUE,
+    telefone VARCHAR(20),
+    email VARCHAR(100) UNIQUE,
+    endereco VARCHAR(150)
+);
+
+CREATE TABLE Cliente (
+    Pessoa_idPessoa INT PRIMARY KEY,
+    data_cadastro DATE NOT NULL,
+    CONSTRAINT fk_cliente_pessoa FOREIGN KEY (Pessoa_idPessoa)
+        REFERENCES Pessoa(idPessoa)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Funcionario (
+    Pessoa_idPessoa INT PRIMARY KEY,
+    cargo VARCHAR(50) NOT NULL,
+    data_admissao DATE NOT NULL,
+    salario DECIMAL(10,2) NOT NULL,
+    Funcionario_Pessoa_idPessoa INT NULL,
+    CONSTRAINT fk_funcionario_pessoa FOREIGN KEY (Pessoa_idPessoa)
+        REFERENCES Pessoa(idPessoa)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_funcionario_supervisor FOREIGN KEY (Funcionario_Pessoa_idPessoa)
+        REFERENCES Funcionario(Pessoa_idPessoa)
+        ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+CREATE TABLE Categoria (
+    idCategoria INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL,
+    descricao VARCHAR(150)
+);
+
+CREATE TABLE Produto (
+    idProduto INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    descricao VARCHAR(255),
+    preco DECIMAL(10,2) NOT NULL,
+    estoque INT NOT NULL,
+    Categoria_idCategoria INT NOT NULL,
+    CONSTRAINT fk_produto_categoria FOREIGN KEY (Categoria_idCategoria)
+        REFERENCES Categoria(idCategoria)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE Fornecedor (
+    idFornecedor INT AUTO_INCREMENT PRIMARY KEY,
+    razao_social VARCHAR(100) NOT NULL,
+    cnpj CHAR(14) NOT NULL UNIQUE,
+    telefone VARCHAR(20),
+    email VARCHAR(100)
+);
+
+CREATE TABLE Fornecimento (
+    Fornecedor_idFornecedor INT NOT NULL,
+    Produto_idProduto INT NOT NULL,
+    preco_custo DECIMAL(10,2) NOT NULL,
+    prazo_entrega_dias INT NOT NULL,
+    PRIMARY KEY (Fornecedor_idFornecedor, Produto_idProduto),
+    CONSTRAINT fk_fornecimento_fornecedor FOREIGN KEY (Fornecedor_idFornecedor)
+        REFERENCES Fornecedor(idFornecedor)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_fornecimento_produto FOREIGN KEY (Produto_idProduto)
+        REFERENCES Produto(idProduto)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Pedido (
+    idPedido INT AUTO_INCREMENT PRIMARY KEY,
+    data_pedido DATETIME NOT NULL,
+    valor_total DECIMAL(10,2) NOT NULL,
+    status VARCHAR(30) NOT NULL,
+    Cliente_Pessoa_idPessoa INT NOT NULL,
+    Funcionario_Pessoa_idPessoa INT NOT NULL,
+    CONSTRAINT fk_pedido_cliente FOREIGN KEY (Cliente_Pessoa_idPessoa)
+        REFERENCES Cliente(Pessoa_idPessoa)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT fk_pedido_funcionario FOREIGN KEY (Funcionario_Pessoa_idPessoa)
+        REFERENCES Funcionario(Pessoa_idPessoa)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE ItemPedido (
+    Pedido_idPedido INT NOT NULL,
+    Produto_idProduto INT NOT NULL,
+    quantidade INT NOT NULL,
+    preco_unitario DECIMAL(10,2) NOT NULL,
+    PRIMARY KEY (Pedido_idPedido, Produto_idProduto),
+    CONSTRAINT fk_item_pedido FOREIGN KEY (Pedido_idPedido)
+        REFERENCES Pedido(idPedido)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_item_produto FOREIGN KEY (Produto_idProduto)
+        REFERENCES Produto(idProduto)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE NotaFiscal (
+    idNotaFiscal INT AUTO_INCREMENT PRIMARY KEY,
+    numero VARCHAR(30) NOT NULL UNIQUE,
+    data_emissao DATETIME NOT NULL,
+    valor_total DECIMAL(10,2) NOT NULL,
+    Pedido_idPedido INT NOT NULL UNIQUE,
+    CONSTRAINT fk_notafiscal_pedido FOREIGN KEY (Pedido_idPedido)
+        REFERENCES Pedido(idPedido)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO Pessoa (idPessoa, nome, cpf, telefone, email, endereco) VALUES
+(1, 'Ana Beatriz Souza', '11122233301', '35991110001', 'ana.souza@email.com', 'Rua das Flores, 100 - Centro'),
+(2, 'Bruno Carvalho', '11122233302', '35991110002', 'bruno.c@email.com', 'Av. Brasil, 250 - Jardim'),
+(3, 'Carla Mendes', '11122233303', '35991110003', 'carla.m@email.com', 'Rua Tiradentes, 45 - Vila Nova'),
+(4, 'Diego Fernandes', '11122233304', '35991110004', 'diego.f@email.com', 'Rua São José, 88 - Centro'),
+(5, 'Eduarda Lima', '11122233305', '35991110005', 'eduarda.l@email.com', 'Av. Paulista, 900 - Bela Vista'),
+(6, 'Fernando Costa', '22233344401', '35992220001', 'fernando.gerente@empresa.com', 'Rua A, 10 - Morumbi'),
+(7, 'Gabriela Rocha', '22233344402', '35992220002', 'gabriela.vendas@empresa.com', 'Rua B, 20 - Centro'),
+(8, 'Henrique Alves', '22233344403', '35992220003', 'henrique.vendas@empresa.com', 'Rua C, 30 - São João'),
+(9, 'Isabela Martins', '22233344404', '35992220004', 'isabela.caixa@empresa.com', 'Rua D, 40 - Fátima'),
+(10, 'João Pedro Ribeiro', '22233344405', '35992220005', 'joao.estoque@empresa.com', 'Rua E, 50 - Cruzeiro'),
+(11, 'Lucas Cadastro Temp', '99988877766', '35999999999', 'lucas.temp@email.com', 'Rua Temporária, 0');
+
+INSERT INTO Cliente (Pessoa_idPessoa, data_cadastro) VALUES
+(1, '2026-01-10'),
+(2, '2026-01-15'),
+(3, '2026-02-01'),
+(4, '2026-02-12'),
+(5, '2026-03-05'),
+(11, '2026-03-20');
+
+INSERT INTO Funcionario (Pessoa_idPessoa, cargo, data_admissao, salario, Funcionario_Pessoa_idPessoa) VALUES
+(6, 'Gerente Comercial', '2023-05-01', 6500.00, NULL),
+(7, 'Vendedor Sênior', '2024-02-15', 3500.00, 6),
+(8, 'Vendedor Pleno', '2024-08-01', 2800.00, 6),
+(9, 'Operador de Caixa', '2025-01-10', 2200.00, 6),
+(10, 'Analista de Estoque', '2025-03-20', 2600.00, 6);
+
+INSERT INTO Categoria (idCategoria, nome, descricao) VALUES
+(1, 'Periféricos', 'Teclados, mouses, headsets e acessórios'),
+(2, 'Hardware', 'Processadores, placas de vídeo, memórias e SSDs'),
+(3, 'Monitores', 'Monitores gamer e profissionais de alta resolução'),
+(4, 'Redes', 'Roteadores, switches e adaptadores Wi-Fi'),
+(5, 'Cadeiras e Mesas', 'Mobiliário ergonômico para escritório e jogos');
+
+INSERT INTO Produto (idProduto, nome, descricao, preco, estoque, Categoria_idCategoria) VALUES
+(1, 'Mouse Gamer Sem Fio', 'Sensor óptico 26000 DPI, ultraleve', 350.00, 40, 1),
+(2, 'SSD NVMe 1TB PCIe 4.0', 'Leitura até 7000MB/s', 550.00, 25, 2),
+(3, 'Monitor IPS 27" 144Hz', 'Resolução QHD, 1ms de resposta', 1600.00, 15, 3),
+(4, 'Roteador Wi-Fi 6 AX3000', 'Dual Band Gigabit com 4 antenas', 400.00, 30, 4),
+(5, 'Cadeira Ergonômica Mesh', 'Apoio lombar ajustável e braços 3D', 1200.00, 10, 5);
+
+INSERT INTO Fornecedor (idFornecedor, razao_social, cnpj, telefone, email) VALUES
+(1, 'TechDist Brasil Ltda', '12345678000101', '1133334401', 'contato@techdist.com.br'),
+(2, 'Global Hardware S.A.', '12345678000102', '1133334402', 'vendas@globalhw.com.br'),
+(3, 'DisplayVisão Importadora', '12345678000103', '2133334403', 'comercial@displayvisao.com.br'),
+(4, 'NetConecta Soluções', '12345678000104', '3133334404', 'suporte@netconecta.com.br'),
+(5, 'ConfortOffice Indústria', '12345678000105', '4133334405', 'pedidos@confortoffice.com.br');
+
+INSERT INTO Fornecimento (Fornecedor_idFornecedor, Produto_idProduto, preco_custo, prazo_entrega_dias) VALUES
+(1, 1, 210.00, 5),
+(2, 2, 340.00, 7),
+(3, 3, 1050.00, 10),
+(4, 4, 240.00, 4),
+(5, 5, 780.00, 12);
+
+INSERT INTO Pedido (idPedido, data_pedido, valor_total, status, Cliente_Pessoa_idPessoa, Funcionario_Pessoa_idPessoa) VALUES
+(1, '2026-03-01 10:15:00', 700.00, 'Pago', 1, 7),
+(2, '2026-03-02 14:30:00', 1600.00, 'Enviado', 2, 8),
+(3, '2026-03-03 16:45:00', 950.00, 'Em Processamento', 3, 7),
+(4, '2026-03-04 09:20:00', 1200.00, 'Pago', 4, 8),
+(5, '2026-03-05 18:00:00', 900.00, 'Entregue', 5, 7);
+
+INSERT INTO ItemPedido (Pedido_idPedido, Produto_idProduto, quantidade, preco_unitario) VALUES
+(1, 1, 2, 350.00),
+(2, 3, 1, 1600.00),
+(3, 2, 1, 550.00),
+(3, 4, 1, 400.00),
+(4, 5, 1, 1200.00),
+(5, 1, 1, 350.00),
+(5, 2, 1, 550.00);
+
+INSERT INTO NotaFiscal (idNotaFiscal, numero, data_emissao, valor_total, Pedido_idPedido) VALUES
+(1, 'NF-2026-0001', '2026-03-01 10:20:00', 700.00, 1),
+(2, 'NF-2026-0002', '2026-03-02 14:35:00', 1600.00, 2),
+(3, 'NF-2026-0003', '2026-03-03 17:00:00', 950.00, 3),
+(4, 'NF-2026-0004', '2026-03-04 09:25:00', 1200.00, 4),
+(5, 'NF-2026-0005', '2026-03-05 18:10:00', 900.00, 5);
+
+UPDATE Pedido SET status = 'Pago' WHERE idPedido = 3;
+
+UPDATE Pessoa SET endereco = 'Rua das Palmeiras, 500 - Centro' WHERE idPessoa = 1;
+
+DELETE FROM Pessoa WHERE idPessoa = 11;
+
+DROP ROLE IF EXISTS 'role_equipe_vendas';
+DROP USER IF EXISTS 'vendedor_gabriela'@'localhost';
+DROP USER IF EXISTS 'vendedor_henrique'@'localhost';
+
+CREATE ROLE 'role_equipe_vendas';
+
+GRANT SELECT ON projeto_vendas.* TO 'role_equipe_vendas';
+GRANT INSERT, UPDATE, DELETE ON projeto_vendas.Pedido TO 'role_equipe_vendas';
+GRANT INSERT, UPDATE ON projeto_vendas.ItemPedido TO 'role_equipe_vendas';
+
+CREATE USER 'vendedor_gabriela'@'localhost' IDENTIFIED BY 'Senha123';
+CREATE USER 'vendedor_henrique'@'localhost' IDENTIFIED BY 'Senha456';
+
+GRANT 'role_equipe_vendas' TO 'vendedor_gabriela'@'localhost', 'vendedor_henrique'@'localhost';
+SET DEFAULT ROLE 'role_equipe_vendas' TO 'vendedor_gabriela'@'localhost', 'vendedor_henrique'@'localhost';
+
+SELECT 
+    nf.numero AS 'Número NF',
+    nf.data_emissao AS 'Data de Emissão',
+    p.idPedido AS 'Pedido',
+    pes.nome AS 'Cliente',
+    pes.cpf AS 'CPF',
+    nf.valor_total AS 'Valor Total'
+FROM NotaFiscal nf
+INNER JOIN Pedido p ON nf.Pedido_idPedido = p.idPedido
+INNER JOIN Cliente c ON p.Cliente_Pessoa_idPessoa = c.Pessoa_idPessoa
+INNER JOIN Pessoa pes ON c.Pessoa_idPessoa = pes.idPessoa;
+
+SELECT 
+    cat.nome AS 'Categoria',
+    prod.nome AS 'Produto',
+    prod.preco AS 'Preço Unitário',
+    prod.estoque AS 'Estoque',
+    (prod.preco * prod.estoque) AS 'Total em Estoque'
+FROM Categoria cat
+INNER JOIN Produto prod ON cat.idCategoria = prod.Categoria_idCategoria;
+
+SELECT 
+    pes.nome AS 'Funcionário',
+    f.cargo AS 'Cargo',
+    p.idPedido AS 'Código Pedido',
+    p.status AS 'Status',
+    p.valor_total AS 'Valor da Venda'
+FROM Funcionario f
+INNER JOIN Pessoa pes ON f.Pessoa_idPessoa = pes.idPessoa
+INNER JOIN Pedido p ON f.Pessoa_idPessoa = p.Funcionario_Pessoa_idPessoa;
+
+SELECT 
+    ped.idPedido AS 'Pedido',
+    prod.nome AS 'Produto',
+    forn.razao_social AS 'Fornecedor',
+    ip.quantidade AS 'Quantidade',
+    fornec.preco_custo AS 'Preço de Custo',
+    ip.preco_unitario AS 'Preço de Venda'
+FROM Pedido ped
+INNER JOIN ItemPedido ip ON ped.idPedido = ip.Pedido_idPedido
+INNER JOIN Produto prod ON ip.Produto_idProduto = prod.idProduto
+INNER JOIN Fornecimento fornec ON prod.idProduto = fornec.Produto_idProduto
+INNER JOIN Fornecedor forn ON fornec.Fornecedor_idFornecedor = forn.idFornecedor;
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS AtualizarSalarioFuncionario$$
+CREATE PROCEDURE AtualizarSalarioFuncionario(
+    IN funcionario_id INT,
+    IN percentual_aumento DECIMAL(5,2)
+)
+BEGIN
+    IF percentual_aumento > 0 THEN
+        UPDATE Funcionario
+        SET salario = salario * (1 + percentual_aumento / 100)
+        WHERE Pessoa_idPessoa = funcionario_id;
+        
+        SELECT 'Salário atualizado com sucesso!' AS Resultado;
+    ELSE
+        SELECT 'Percentual inválido! Informe um valor maior que zero.' AS Resultado;
+    END IF;
+END$$
+DELIMITER ;
+
+CALL AtualizarSalarioFuncionario(7, 10.0);
+
+DELIMITER $$
+DROP FUNCTION IF EXISTS calcular_lucro_item$$
+CREATE FUNCTION calcular_lucro_item(preco_venda DECIMAL(10,2), preco_custo DECIMAL(10,2), qtd INT)
+RETURNS DECIMAL(10,2)
+DETERMINISTIC
+BEGIN
+    RETURN (preco_venda - preco_custo) * qtd;
+END$$
+DELIMITER ;
+
+SELECT 
+    Pedido_idPedido AS 'Pedido',
+    Produto_idProduto AS 'ID Produto',
+    quantidade AS 'Qtd',
+    preco_unitario AS 'Preço Venda',
+    calcular_lucro_item(preco_unitario, 200.00, quantidade) AS 'Lucro Estimado'
+FROM ItemPedido;
+
+CREATE OR REPLACE VIEW vendas_detalhadas AS (
+    SELECT 
+        p.idPedido AS 'Pedido',
+        pes_cli.nome AS 'Cliente',
+        prod.nome AS 'Produto',
+        ip.quantidade AS 'Quantidade',
+        ip.preco_unitario AS 'Preço Unitário',
+        (ip.quantidade * ip.preco_unitario) AS 'Total da Venda'
+    FROM Pedido p
+    INNER JOIN Cliente c ON p.Cliente_Pessoa_idPessoa = c.Pessoa_idPessoa
+    INNER JOIN Pessoa pes_cli ON c.Pessoa_idPessoa = pes_cli.idPessoa
+    INNER JOIN ItemPedido ip ON p.idPedido = ip.Pedido_idPedido
+    INNER JOIN Produto prod ON ip.Produto_idProduto = prod.idProduto
+);
+
+SELECT * FROM vendas_detalhadas;
+
+DELIMITER $$
+DROP TRIGGER IF EXISTS trg_baixa_estoque$$
+CREATE TRIGGER trg_baixa_estoque AFTER INSERT
+ON ItemPedido
+FOR EACH ROW
+BEGIN
+    UPDATE Produto
+    SET estoque = estoque - NEW.quantidade
+    WHERE idProduto = NEW.Produto_idProduto;
+END$$
+DELIMITER ;
+
+INSERT INTO ItemPedido (Pedido_idPedido, Produto_idProduto, quantidade, preco_unitario)
+VALUES (1, 4, 1, 400.00);
+
+DELIMITER $$
+DROP TRIGGER IF EXISTS desconto_check_pedido$$
+CREATE TRIGGER desconto_check_pedido BEFORE UPDATE
+ON Pedido
+FOR EACH ROW
+BEGIN
+    IF NEW.valor_total > 1500.00 THEN
+        SET NEW.valor_total = NEW.valor_total * 0.9;
+    END IF;
+END$$
+DELIMITER ;
+
+UPDATE Pedido SET valor_total = 1800.00 WHERE idPedido = 2;
+
+CREATE TABLE IF NOT EXISTS log_pedido (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    idPedido_antigo INT,
+    valor_antigo DECIMAL(10,2),
+    removido_em DATETIME
+);
+
+DELIMITER $$
+DROP TRIGGER IF EXISTS pedido_auditoria$$
+CREATE TRIGGER pedido_auditoria AFTER DELETE
+ON Pedido
+FOR EACH ROW
+BEGIN
+    INSERT INTO log_pedido (idPedido_antigo, valor_antigo, removido_em)
+    VALUES (OLD.idPedido, OLD.valor_total, NOW());
+END$$
+DELIMITER ;
+
+ALTER TABLE Pedido ADD COLUMN observacao VARCHAR(100);
+ALTER TABLE Pedido DROP COLUMN observacao;
+
+CREATE TABLE RascunhoCotacao (id INT PRIMARY KEY, descricao VARCHAR(50));
+INSERT INTO RascunhoCotacao VALUES (1, 'Cotação Teste');
+TRUNCATE TABLE RascunhoCotacao;
+DROP TABLE RascunhoCotacao;
+
+REVOKE DELETE ON projeto_vendas.Pedido FROM 'role_equipe_vendas';
+
+START TRANSACTION;
+UPDATE Produto SET estoque = estoque + 5 WHERE idProduto = 1;
+SAVEPOINT ponto_estoque_atualizado;
+UPDATE Produto SET preco = 9999.00 WHERE idProduto = 1;
+ROLLBACK TO SAVEPOINT ponto_estoque_atualizado;
+COMMIT;
